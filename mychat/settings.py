@@ -127,3 +127,6 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AGORA_APP_ID = "105db6a07eeb4308be65c2eb53c616be"
+AGORA_APP_CERTIFICATE = "c1e071511e354de797b2d469867db0ad"

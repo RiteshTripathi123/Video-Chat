@@ -1,10 +1,18 @@
+console.log('=== STREAMS.JS LOADED ===');
 
-const APP_ID = 'YOUR APP ID'
+const APP_ID = '105db6a07eeb4308be65c2eb53c616be'  // Your actual App ID
+console.log('APP_ID:', APP_ID);
+console.log('APP_ID length:', APP_ID.length);  // Should be 32 characters
 const TOKEN = sessionStorage.getItem('token')
 const CHANNEL = sessionStorage.getItem('room')
 let UID = sessionStorage.getItem('UID')
 
+console.log('TOKEN:', TOKEN);
+console.log('CHANNEL:', CHANNEL);
+console.log('UID:', UID);
+
 let NAME = sessionStorage.getItem('name')
+console.log('NAME:', NAME);
 
 const client = AgoraRTC.createClient({mode:'rtc', codec:'vp8'})
 
@@ -18,13 +26,25 @@ let joinAndDisplayLocalStream = async () => {
     client.on('user-left', handleUserLeft)
 
     try{
+        console.log('Attempting to join...', APP_ID, CHANNEL, TOKEN, UID)
         UID = await client.join(APP_ID, CHANNEL, TOKEN, UID)
+        console.log('Join successful! UID:', UID)
     }catch(error){
-        console.error(error)
+        console.error('Join error:', error)
+        alert('Failed to join room: ' + error.message)
         window.open('/', '_self')
+        return  // IMPORTANT: Stop execution here
     }
     
-    localTracks = await AgoraRTC.createMicrophoneAndCameraTracks()
+    try{
+        localTracks = await AgoraRTC.createMicrophoneAndCameraTracks()
+        console.log('Local tracks created')
+    }catch(error){
+        console.error('Camera/Mic error:', error)
+        alert('Cannot access camera/microphone: ' + error.message)
+        window.open('/', '_self')
+        return
+    }
 
     let member = await createMember()
 
@@ -140,4 +160,7 @@ joinAndDisplayLocalStream()
 document.getElementById('leave-btn').addEventListener('click', leaveAndRemoveLocalStream)
 document.getElementById('camera-btn').addEventListener('click', toggleCamera)
 document.getElementById('mic-btn').addEventListener('click', toggleMic)
+
+
+
 
